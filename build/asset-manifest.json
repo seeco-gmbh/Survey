@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/survey-process-intelligence/static/css/main.99c98c47.css",
+    "main.js": "/survey-process-intelligence/static/js/main.1bd2e8fa.js",
+    "static/js/453.9daba7a9.chunk.js": "/survey-process-intelligence/static/js/453.9daba7a9.chunk.js",
+    "index.html": "/survey-process-intelligence/index.html",
+    "main.99c98c47.css.map": "/survey-process-intelligence/static/css/main.99c98c47.css.map",
+    "main.1bd2e8fa.js.map": "/survey-process-intelligence/static/js/main.1bd2e8fa.js.map",
+    "453.9daba7a9.chunk.js.map": "/survey-process-intelligence/static/js/453.9daba7a9.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.99c98c47.css",
+    "static/js/main.1bd2e8fa.js"
+  ]
+}

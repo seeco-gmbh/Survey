@@ -1,0 +1,348 @@
+/* App.css - Comprehensive styling for survey components */
+
+/* Container styles */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Question container */
+.question-container {
+  margin-bottom: 2rem;
+}
+
+/* Label styles */
+.question-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.question-label-error {
+  color: #ef4444;
+}
+
+/* Required mark */
+.required-mark {
+  color: #ef4444;
+  margin-left: 0.25rem;
+}
+
+/* Info icon and tooltip */
+.info-icon {
+  margin-left: 0.25rem;
+  display: inline-block;
+  position: relative;
+}
+
+.info-icon-button {
+  width: 1.2rem;
+  height: 1.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e5e7eb;
+  color: #4b5563;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.info-icon-button:hover {
+  background-color: #d1d5db;
+  color: #1f2937;
+  transform: scale(1.05);
+}
+
+.info-tooltip {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  background-color: #1f2937;
+  color: white;
+  font-size: 0.875rem;
+  border-radius: 0.375rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  z-index: 10;
+  max-width: calc(50vw - 2rem);
+  white-space: normal;
+  line-height: 1.4;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Input field styles */
+.question-field {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  outline: none;
+  transition: all 0.2s;
+  background-color: white;
+}
+
+.question-field:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.question-field-error {
+  border-color: #ef4444;
+}
+
+.question-field-error:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+/* Container for grouped elements (checkboxes, radio buttons) */
+.question-group-container {
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  padding: 1rem;
+}
+
+.question-group-container-error {
+  border-color: #ef4444;
+}
+
+/* Checkbox and radio styles */
+.checkbox-item, .radio-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.15s ease;
+}
+
+.checkbox-item:hover, .radio-item:hover {
+  background-color: #f9fafb;
+}
+
+.checkbox-item:last-child, .radio-item:last-child {
+  margin-bottom: 0;
+}
+
+.checkbox-input, .radio-input {
+  position: relative;
+  margin-right: 0.75rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  appearance: none;
+  border: 2px solid #9ca3af;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease;
+  background-color: white;
+}
+
+.radio-input {
+  border-radius: 50%;
+}
+
+.checkbox-input:checked, .radio-input:checked {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+}
+
+.checkbox-input:checked::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.radio-input:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: white;
+}
+
+.checkbox-input:focus, .radio-input:focus {
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  outline: none;
+}
+
+.checkbox-label, .radio-label {
+  cursor: pointer;
+  font-size: 0.9375rem;
+}
+
+.checkbox-label-disabled, .radio-label-disabled {
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Slider styles */
+.slider-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.slider-input {
+  width: 100%;
+}
+
+.slider-input-error::-webkit-slider-thumb {
+  background-color: #ef4444 !important;
+  border-color: #ef4444 !important;
+}
+
+.slider-input-error::-moz-range-thumb {
+  background-color: #ef4444 !important;
+  border-color: #ef4444 !important;
+}
+
+.slider-marks {
+  position: relative;
+  height: 40px;
+  width: 100%;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.slider-mark {
+  position: absolute;
+}
+
+.slider-mark-value {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #515151;
+  ;
+}
+
+.slider-mark-label {
+  display: block;
+  font-size: 0.75rem;
+  line-height: 1.2;
+  max-width: 100%;
+  word-wrap: break-word;
+  hyphens: auto;
+  color: #515151;
+}
+
+/* Hint and error message */
+.question-hint {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+.question-error {
+  font-size: 0.75rem;
+  color: #ef4444;
+  margin-top: 0.25rem;
+}
+
+/* Ranked question styles */
+.ranked-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.ranked-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  margin-bottom: 0.25rem;
+  cursor: grab;
+  transition: all 0.2s ease;
+}
+
+.ranked-item:last-child {
+  margin-bottom: 0;
+}
+
+.ranked-item-dragging {
+  background-color: #f3f4f6;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.ranked-item:hover {
+  border-color: #d1d5db;
+  background-color: #f9fafb;
+}
+
+.ranked-handle {
+  cursor: grab;
+  margin-right: 0.75rem;
+  color: #6b7280;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ranked-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  background-color: #e5e7eb;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  margin-right: 0.75rem;
+}
+
+/* Drag indicator styles */
+.drag-indicator {
+  height: 4px;
+  margin: 2px 0;
+  background-color: #3b82f6;
+  border-radius: 9999px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  transition: opacity 0.2s, visibility 0.2s;
+}
+
+.drag-indicator-active {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
