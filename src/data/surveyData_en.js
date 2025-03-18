@@ -45,24 +45,6 @@ export const surveyData_en = {
           hint: "This is a range slider with percentage"
         },
         {
-          id: "multiselect_limited22",
-          type: "multiselect",
-          label: "Limited Multi-select (max. 2)",
-          required: true,
-          options: [
-            "Selection 1",
-            "Selection 2",
-            "Selection 3",
-            "Selection 4",
-            "Selection 5"
-          ],
-          minSelect: 2,
-          validation: {
-            minSelect: 2
-          },
-          info: "You can select a maximum of 2 options"
-        },
-        {
           id: "slider_example",
           type: "marks_slider",
           label: "Slider with Labels",
@@ -91,12 +73,23 @@ export const surveyData_en = {
           },
           info: "This is a Likert scale",
           hint: "This is a Likert scale"
+        },
+        {
+          id: "select_example_2",
+          type: "select",
+          label: "Choose next section to test conditional sections",
+          required: true,
+          options: [
+            "Basic Input Types",
+            "Selection Types"
+          ]
         }
       ]
     },
     {
       title: "Basic Input Types",
       description: "Test of basic input fields",
+      condition: { dependsOn: "select_example_2", value: "Basic Input Types" },
       questions: [
         {
           id: "text_example",

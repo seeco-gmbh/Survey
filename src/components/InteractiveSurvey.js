@@ -54,7 +54,9 @@ class InteractiveSurvey extends React.Component {
 
   // Proceed after language selection
   proceedWithLanguage = () => {
-    this.setState({ languageSelected: true });
+    this.setState({ languageSelected: true }, () => {
+      this.checkAndSkipConditionalSections();
+    });
   }
 
   // Save answer and trigger validation
@@ -117,6 +119,74 @@ class InteractiveSurvey extends React.Component {
     this.saveAnswer(questionId, newOrder, true);
   };
 
+  // Check if a question should be displayed based on conditional logic
+  shouldShowQuestion = (question) => {
+    if (!question.condition) return true;
+    
+    const { dependsOn, value } = question.condition;
+    const answer = this.state.answers[dependsOn];
+    
+    // If answer is undefined, the condition is not met
+    if (answer === undefined) return false;
+    
+    // Handle array values (for multiselect)
+    if (Array.isArray(answer)) {
+      // If value is also an array, check if any value matches
+      if (Array.isArray(value)) {
+        return value.some(v => answer.includes(v));
+      }
+      // If value is a string, check if it's included in the answer array
+      return answer.includes(value);
+    }
+    
+    // Handle boolean values (for checkbox)
+    if (typeof answer === 'boolean') {
+      return answer === value;
+    }
+    
+    // Handle function conditions
+    if (typeof value === 'function') {
+      return value(answer);
+    }
+    
+    // Default case: direct comparison
+    return answer === value;
+  };
+
+  // Check if a section should be displayed based on conditional logic
+  shouldShowSection = (section) => {
+    if (!section.condition) return true;
+    
+    const { dependsOn, value } = section.condition;
+    const answer = this.state.answers[dependsOn];
+    
+    // If answer is undefined, the condition is not met
+    if (answer === undefined) return false;
+    
+    // Handle array values (for multiselect)
+    if (Array.isArray(answer)) {
+      // If value is also an array, check if any value matches
+      if (Array.isArray(value)) {
+        return value.some(v => answer.includes(v));
+      }
+      // If value is a string, check if it's included in the answer array
+      return answer.includes(value);
+    }
+    
+    // Handle boolean values (for checkbox)
+    if (typeof answer === 'boolean') {
+      return answer === value;
+    }
+    
+    // Handle function conditions
+    if (typeof value === 'function') {
+      return value(answer);
+    }
+    
+    // Default case: direct comparison
+    return answer === value;
+  };
+
   // Navigate to next section or submit if on last section
   nextSection = () => {
     // Validate required fields
@@ -124,15 +194,23 @@ class InteractiveSurvey extends React.Component {
       return;
     }
     
+    // Find the next valid section to display
+    let nextSectionIndex = this.state.currentSection + 1;
+    
+    while (
+      nextSectionIndex < this.state.surveyData.length && 
+      !this.shouldShowSection(this.state.surveyData[nextSectionIndex])
+    ) {
+      nextSectionIndex++;
+    }
+    
     // If not the last section, go to next section
-    if (this.state.currentSection < this.state.surveyData.length - 1) {
-      // Scroll to top after state update
-      const nextSection = this.state.currentSection + 1;
+    if (nextSectionIndex < this.state.surveyData.length) {
       this.setState({
-        currentSection: nextSection,
+        currentSection: nextSectionIndex,
         validationError: false,
         missingFields: [],
-        progress: calculateProgress(nextSection, this.state.surveyData.length)
+        progress: calculateProgress(nextSectionIndex, this.state.surveyData.length)
       }, () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
@@ -141,27 +219,48 @@ class InteractiveSurvey extends React.Component {
       this.handleSubmit();
     }
   };
-
+  
   // Navigate to previous section
   prevSection = () => {
-    const prevSection = this.state.currentSection - 1;
-    this.setState({
-      currentSection: prevSection,
-      validationError: false,
-      missingFields: [],
-      progress: calculateProgress(prevSection, this.state.surveyData.length)
-    }, () => {
-      // Scroll to top after state update
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    // Find the previous valid section to display
+    let prevSectionIndex = this.state.currentSection - 1;
+    
+    while (
+      prevSectionIndex >= 0 && 
+      !this.shouldShowSection(this.state.surveyData[prevSectionIndex])
+    ) {
+      prevSectionIndex--;
+    }
+    
+    if (prevSectionIndex >= 0) {
+      this.setState({
+        currentSection: prevSectionIndex,
+        validationError: false,
+        missingFields: [],
+        progress: calculateProgress(prevSectionIndex, this.state.surveyData.length)
+      }, () => {
+        // Scroll to top after state update
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
   };
 
   // Validate required fields in current section
   validateRequiredFields = () => {
-    const currentSectionQuestions = this.state.surveyData[this.state.currentSection].questions;
+    const currentSection = this.state.surveyData[this.state.currentSection];
+    
+    // Skip validation if section shouldn't be shown (safety check)
+    if (!this.shouldShowSection(currentSection)) {
+      return true;
+    }
+    
+    const currentSectionQuestions = currentSection.questions;
     const missingFields = [];
     
-    const requiredQuestions = currentSectionQuestions.filter(q => q.required && this.shouldShowQuestion(q));
+    // Only validate questions that are required AND should be shown based on conditions
+    const requiredQuestions = currentSectionQuestions.filter(
+      q => q.required && this.shouldShowQuestion(q)
+    );
     
     requiredQuestions.forEach(q => {
       const answer = this.state.answers[q.id];
@@ -242,40 +341,6 @@ class InteractiveSurvey extends React.Component {
     this.saveToLocalStorage(submissionData);
     this.saveToJsonBin(submissionData);
     this.setState({ submitted: true });
-  };
-
-  // Check if a question should be displayed based on conditional logic
-  shouldShowQuestion = (question) => {
-    if (!question.condition) return true;
-    
-    const { dependsOn, value } = question.condition;
-    const answer = this.state.answers[dependsOn];
-    
-    // If answer is undefined, the condition is not met
-    if (answer === undefined) return false;
-    
-    // Handle array values (for multiselect)
-    if (Array.isArray(answer)) {
-      // If value is also an array, check if any value matches
-      if (Array.isArray(value)) {
-        return value.some(v => answer.includes(v));
-      }
-      // If value is a string, check if it's included in the answer array
-      return answer.includes(value);
-    }
-    
-    // Handle boolean values (for checkbox)
-    if (typeof answer === 'boolean') {
-      return answer === value;
-    }
-    
-    // Handle function conditions
-    if (typeof value === 'function') {
-      return value(answer);
-    }
-    
-    // Default case: direct comparison
-    return answer === value;
   };
 
   // Render function for question types
@@ -381,6 +446,13 @@ class InteractiveSurvey extends React.Component {
     }
     
     const section = this.state.surveyData[this.state.currentSection];
+    
+    // Check if current section should be shown
+    if (!this.shouldShowSection(section)) {
+      // If not, try to find next section automatically
+      this.nextSection();
+      return <div><p>Loading next section...</p></div>;
+    }
     
     return (
       <div className="mb-8">
@@ -521,6 +593,34 @@ class InteractiveSurvey extends React.Component {
         }
       `;
       document.head.appendChild(style);
+    }
+
+    // Check if first section should be skipped due to conditions
+    if (this.state.languageSelected && this.state.surveyData && this.state.surveyData.length > 0) {
+      this.checkAndSkipConditionalSections();
+    }
+  }
+
+  // Helper method to check and skip sections based on conditions
+  checkAndSkipConditionalSections = () => {
+    let sectionIndex = this.state.currentSection;
+    
+    // If current section shouldn't be shown, find the next valid one
+    if (this.state.surveyData[sectionIndex] && !this.shouldShowSection(this.state.surveyData[sectionIndex])) {
+      while (
+        sectionIndex < this.state.surveyData.length && 
+        !this.shouldShowSection(this.state.surveyData[sectionIndex])
+      ) {
+        sectionIndex++;
+      }
+      
+      // Update state if we found a valid section
+      if (sectionIndex < this.state.surveyData.length) {
+        this.setState({
+          currentSection: sectionIndex,
+          progress: calculateProgress(sectionIndex, this.state.surveyData.length)
+        });
+      }
     }
   }
 

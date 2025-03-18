@@ -162,20 +162,6 @@ export const surveyData_de = {
           info: "Dieses Feld erscheint nur, wenn 'Sonstiges' oben ausgewählt wurde"
         },
         {
-          id: "multiselect_example",
-          type: "multiselect",
-          label: "Mehrfachauswahl Beispiel",
-          required: true,
-          options: [
-            "Option A",
-            "Option B",
-            "Option C",
-            "Option D",
-            "Option E"
-          ],
-          info: "Sie können mehrere Optionen auswählen"
-        },
-        {
           id: "multiselect_limited",
           type: "multiselect",
           label: "Begrenzte Mehrfachauswahl (max. 2)",
@@ -203,12 +189,23 @@ export const surveyData_de = {
             "Fünftes Element"
           ],
           hint: "Ziehen Sie die Elemente, um sie nach Präferenz zu ordnen"
+        },
+        {
+          id: "select_example_2",
+          type: "select",
+          label: "Wählen Sie die nächste Abschnitt, um bedingte Abschnitte zu testen",
+          required: true,
+          options: [
+            "Bedingte Logik",
+            "Bereichs- und Schieberegler-Typen"
+          ]
         }
       ]
     },
     {
       title: "Bedingte Logik",
       description: "Test der bedingten Anzeigelogik",
+      condition: { dependsOn: "select_example_2", value: "Bedingte Logik" },
       questions: [
         {
           id: "trigger_question",
