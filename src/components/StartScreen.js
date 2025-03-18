@@ -75,7 +75,7 @@ const StartScreen = ({
         </button>
         
         <p className="survey-anonymity-note">
-          {startData.anonymityNote || t('anonymityNote', language)}
+          {startData.anonymityNote}
         </p>
       </div>
     </div>
