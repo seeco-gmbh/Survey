@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import BaseQuestion, { isError } from './BaseQuestion';
 import { t } from '../../localization';
 
@@ -38,6 +38,23 @@ const SliderQuestion = ({
       }
     }
   }, [value, question.min]);
+
+  const updateSliderFill = useCallback(() => {
+    if (!sliderRef.current || question.marks) return;
+    
+    const min = question.min || 0;
+    const max = question.max || 100;
+    const percentage = ((currentValue - min) / (max - min)) * 100;
+    
+    // Set the width of the ::before pseudo-element using CSS custom property
+    sliderRef.current.style.setProperty('--fill-percentage', `${percentage}%`);
+  }, [currentValue, question.marks, question.min, question.max]);
+
+  useEffect(() => {
+    if (sliderRef.current) {
+      updateSliderFill();
+    }
+  }, [updateSliderFill]);
   
   const handleSliderChange = (e) => {
     const newValue = parseInt(e.target.value, 10);
@@ -149,7 +166,7 @@ const SliderQuestion = ({
         <input
           ref={sliderRef}
           type="range"
-          className={`slider-input ${hasError ? 'slider-input-error' : ''}`}
+          className={`slider-input ${hasError ? 'slider-input-error' : ''} ${question.marks ? 'marks-slider' : ''}`}
           min={question.marks ? Math.min(...Object.keys(question.marks).map(Number)) : (question.min || 0)}
           max={question.marks ? Math.max(...Object.keys(question.marks).map(Number)) : (question.max || 100)}
           step={calculateStepSize()}
@@ -159,6 +176,7 @@ const SliderQuestion = ({
           data-testid={`slider-${question.id}`}
           style={{
             accentColor: hasError ? '#ef4444' : '',
+            '--fill-percentage': `${((currentValue - (question.min || 0)) / ((question.max || 100) - (question.min || 0))) * 100}%`,
           }}
         />
 
