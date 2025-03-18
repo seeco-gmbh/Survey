@@ -14,10 +14,8 @@ const SliderQuestion = ({
   const sliderRef = useRef(null);
   const isDefaultValue = currentValue === (question.min || 0);
   
-  // Check if the slider should be considered "empty" for validation purposes
   const isEffectivelyEmpty = isDefaultValue && !userInteracted;
   
-  // Use the standard required validation, but consider default value as empty if not interacted with
   const { hasError } = isError(
     question, 
     isEffectivelyEmpty ? null : currentValue, 
@@ -27,8 +25,7 @@ const SliderQuestion = ({
   
   const calculateStepSize = () => {
     if (question.marks) {
-      const markEntries = Object.entries(question.marks);
-      return 100 / (markEntries.length - 1);
+      return 1;
     }
     return question.step || 1;
   };
@@ -50,45 +47,77 @@ const SliderQuestion = ({
   };
 
   const renderMarksAsColumns = () => {
-    if (!question.marks) return null;
-    
-    const markEntries = Object.entries(question.marks);
+    if (!question.marks) {
+      return (
+        <div className="slider-marks" style={{ height: '30px' }}>
+          <div
+            className="slider-mark text-left"
+            style={{ 
+              left: '0%',
+              transform: 'translateX(0)',
+              width: 'auto'
+            }}
+          >
+            <span className={`slider-mark-value ${hasError ? 'text-red-600' : ''}`}>
+              {(question.min || 0)}{unit}
+            </span>
+          </div>
+          <div
+            className="slider-mark text-right"
+            style={{ 
+              left: '100%',
+              transform: 'translateX(-100%)',
+              width: 'auto',
+            }}
+          >
+            <span className={`slider-mark-value ${hasError ? 'text-red-600' : ''}`}>
+              {(question.max || 100)}{unit}
+            </span>
+          </div>
+        </div>
+      );
+    }
 
+    const markEntries = Object.entries(question.marks);
+    
     return (
       <div className="slider-marks">
         {markEntries.map(([markValue, label], index) => {
           const position = (index / (markEntries.length - 1)) * 100;
-          
-          let textAlignment = "text-center";
-          let translateX = `-50%`;
-          if (index > Math.floor(markEntries.length / 2)) {
-            translateX = `-60%`;
-          } else if (index < Math.floor(markEntries.length / 2)) {
-            translateX = `-40%`;
-          }
-          
+
+          let translateX = "-50%";
+          let textAlignment = "center";
+          let width = 100 / markEntries.length + "%";
+
           if (index === 0) {
-            textAlignment = "text-left";
-            translateX = '5%';
+            textAlignment = "left";
+            translateX = "0%";
           } else if (index === markEntries.length - 1) {
-            textAlignment = "text-right";
-            translateX = '-105%';
+            textAlignment = "right";
+            translateX = "-100%";
+          } else {
+            if(index > Math.floor(markEntries.length / 2)) {
+              translateX = "-55%";
+            } else if (index < Math.floor(markEntries.length / 2)) {
+              translateX = "-45%";
+            }
           }
 
           return (
             <div
               key={`mark-${markValue}`}
-              className={`slider-mark ${textAlignment}`}
+              className={`slider-mark ${textAlignment} ${hasError ? 'error' : ''}`}
               style={{ 
                 left: `${position}%`,
                 transform: `translateX(${translateX})`,
-                width: '60px'
+                width: width,
+                textAlign: textAlignment
               }}
             >
-              <span className={`slider-mark-value ${hasError ? 'text-red-600' : ''}`}>
+              <span className="slider-mark-value">
                 {markValue}
               </span>
-              <span className={`slider-mark-label ${hasError ? 'text-red-600' : ''}`}>
+              <span className="slider-mark-label">
                 {label}
               </span>
             </div>
@@ -121,8 +150,8 @@ const SliderQuestion = ({
           ref={sliderRef}
           type="range"
           className={`slider-input ${hasError ? 'slider-input-error' : ''}`}
-          min={question.min || 0}
-          max={question.max || 100}
+          min={question.marks ? Math.min(...Object.keys(question.marks).map(Number)) : (question.min || 0)}
+          max={question.marks ? Math.max(...Object.keys(question.marks).map(Number)) : (question.max || 100)}
           step={calculateStepSize()}
           value={currentValue}
           onChange={handleSliderChange}
@@ -132,19 +161,8 @@ const SliderQuestion = ({
             accentColor: hasError ? '#ef4444' : '',
           }}
         />
-        
-        {!question.marks && (
-          <div className="flex justify-between">
-            <span className={`text-xs ${hasError ? 'text-red-600' : 'text-gray-600'}`}>
-              {question.min || 0}{unit}
-            </span>
-            <span className={`text-xs ${hasError ? 'text-red-600' : 'text-gray-600'}`}>
-              {question.max || 100}{unit}
-            </span>
-          </div>
-        )}
-        
-        {question.marks && renderMarksAsColumns()}
+
+        {renderMarksAsColumns()}
       </div>
     </BaseQuestion>
   );
