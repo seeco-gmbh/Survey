@@ -264,6 +264,33 @@ export const surveyData = {
           hint: "Please provide details about your experience"
         }
       ]
+    },
+    {
+      id: "advanced_settings",
+      title: "Advanced Settings",
+      description: "Additional configuration options",
+      condition: {
+        dependsOn: "automation_level",
+        value: (val) => val && val > 50
+      },
+      questions: [
+        {
+          id: "automation_tools",
+          type: "multiselect",
+          label: "Automation Tools Used",
+          required: true,
+          options: [
+            "Workflow Automation",
+            "RPA",
+            "AI/ML Solutions",
+            "Custom Scripts",
+            "Integration Platforms"
+          ],
+          info: "Select all automation tools currently in use",
+          hint: "Only shown for high automation levels",
+          maxSelect: 3
+        }
+      ]
     }
   ]
 };
@@ -533,6 +560,41 @@ Questions can be conditionally displayed based on answers to previous questions:
   },
   info: "This only appears when automation level is greater than 70%"
 }
+
+// Example for section and Question
+{
+  id: "advanced_settings",
+  title: "Advanced Settings",
+  description: "Additional configuration options",
+  condition: {
+    dependsOn: "automation_level",
+    value: (val) => val && val > 50
+  },
+  questions: [
+    {
+      id: "select_example",
+      type: "select",
+      label: "Dropdown Selection Example",
+      required: true,
+      options: [
+        "Option 1",
+        "Option 2",
+        "Option 3",
+        "Other"
+      ],
+      info: "This is a single-select dropdown"
+    },
+    {
+      id: "conditional_question_example",
+      type: "text",
+      label: "This field appears conditionally",
+      required: true,
+      condition: { dependsOn: "select_example", value: "Other" },
+      info: "This field only appears when 'Other' is selected above"
+    }
+  ]
+}
+
 ```
 
 ## Data Storage
