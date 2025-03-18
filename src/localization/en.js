@@ -25,6 +25,14 @@ export const en = {
   validationMaxDate: "Please enter a date before {maxDate}",
   validationSlider: "Please select a value",
   validationRanked: "Please arrange the items in your preferred order",
+  validationMinSelect: "Please select at least {min}",
+  validationMaxSelect: "Please select no more than {max}",
+
+  //Select question
+  selectExactly: "Select exactly {count}",
+  selectBetween: "Select {min} to {max}",
+  selectMin: "min. {min}",
+  selectMax: "max. {max}",
   
   // Results page
   thankYouTitle: "Thank you for your participation!",
@@ -35,9 +43,6 @@ export const en = {
   infoIconLabel: "i",
   showInfo: "Show more information",
   hideInfo: "Hide information",
-  
-  // Survey title
-  surveyTitle: "Survey on the Implementation of Dynamic Process Intelligence",
   
   // Language selection screen
   welcomeToSurvey: "Welcome to our Survey",

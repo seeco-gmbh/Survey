@@ -25,6 +25,8 @@ export const pt = {
   validationMaxDate: "Por favor, insira uma data antes de {maxDate}",
   validationSlider: "Por favor, selecione um valor",
   validationRanked: "Por favor, organize os itens na sua ordem preferida",
+  validationMinSelect: "Por favor, selecione pelo menos {min}",
+  validationMaxSelect: "Por favor, selecione no máximo {max}",
   
   // Results page
   thankYouTitle: "Obrigado pela sua participação!",
@@ -35,9 +37,6 @@ export const pt = {
   infoIconLabel: "i",
   showInfo: "Mostrar mais informações",
   hideInfo: "Ocultar informações",
-  
-  // Survey title
-  surveyTitle: "Pesquisa sobre a implementação de inteligência de processos dinâmicos",
   
   // Language selection screen
   welcomeToSurvey: "Bem-vindo à nossa pesquisa",

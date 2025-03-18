@@ -54,7 +54,6 @@ const RankedQuestion = ({
   const [isDragging, setIsDragging] = useState(false);
   const [hasBeenModified, setHasBeenModified] = useState(isModified);
   
-  // For validation purposes, consider the ranking as empty if it hasn't been modified
   const effectiveValue = hasBeenModified ? ranking : null;
   
   const { hasError } = isError(question, effectiveValue, shouldValidate, language);
@@ -141,8 +140,7 @@ const RankedQuestion = ({
       shouldValidate={shouldValidate} 
       language={language}
       value={effectiveValue}
-      customErrorMessage={hasError && !hasBeenModified ? 
-        t('validationRanked', language) : null}
+      customErrorMessage={hasError && !hasBeenModified ? t('validationRanked', language) : null}
     >
       <div 
         ref={containerRef}

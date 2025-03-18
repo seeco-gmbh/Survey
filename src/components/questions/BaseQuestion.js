@@ -112,6 +112,7 @@ export default BaseQuestion;
  * @param {Object} question - The question object containing validation rules
  * @param {*} value - The current value of the question
  * @param {boolean} shouldValidate - Whether validation should be performed (e.g., form submitted)
+ * @param {string} language - The language of the application
  * @returns {Object} - { hasError: boolean, errorMessage: string }
  */
 export const isError = (question, value, shouldValidate = false, language) => {

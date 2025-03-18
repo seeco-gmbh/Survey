@@ -25,6 +25,8 @@ export const it = {
   validationMaxDate: "Si prega di inserire una data precedente a {maxDate}",
   validationSlider: "Si prega di selezionare un valore",
   validationRanked: "Si prega di organizzare gli elementi nell'ordine preferito",
+  validationMinSelect: "Si prega di selezionare almeno {min}",
+  validationMaxSelect: "Si prega di selezionare non più di {max}",
   
   // Results page
   thankYouTitle: "Grazie per la tua partecipazione!",
@@ -35,9 +37,6 @@ export const it = {
   infoIconLabel: "i",
   showInfo: "Mostra più informazioni",
   hideInfo: "Nascondi informazioni",
-  
-  // Survey title
-  surveyTitle: "Sondaggio sull'implementazione dell'intelligenza di processo dinamica",
   
   // Language selection screen
   welcomeToSurvey: "Benvenuto al nostro sondaggio",

@@ -25,6 +25,8 @@ export const es = {
   validationMaxDate: "Por favor, introduzca una fecha anterior a {maxDate}",
   validationSlider: "Por favor, seleccione un valor",
   validationRanked: "Por favor, organice los elementos en su orden preferido",
+  validationMinSelect: "Por favor, seleccione al menos {min}",
+  validationMaxSelect: "Por favor, seleccione no más de {max}",
   
   // Results page
   thankYouTitle: "¡Gracias por su participación!",

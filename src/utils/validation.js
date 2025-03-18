@@ -42,6 +42,14 @@ export const validators = {
     if (!value) return true;
     return new Date(value) <= new Date(maxDate);
   },
+  minSelect: (value, minSelect) => {
+    if (!value) return true;
+    return value.length >= minSelect;
+  },
+  maxSelect: (value, maxSelect) => {
+    if (!value) return true;
+    return value.length <= maxSelect;
+  },
   numeric: (value) => {
     if (!value) return true;
     return !isNaN(Number(value));
@@ -75,8 +83,14 @@ export const getErrorMessage = (validationType, language, params) => {
       return t('validationMinDate', language, { minDate: params }).replace('{minDate}', params);
     case 'maxDate':
       return t('validationMaxDate', language, { maxDate: params }).replace('{maxDate}', params);
+    case 'minSelect':
+      return t('validationMinSelect', language, { minSelect: params }).replace('{min}', params);
+    case 'maxSelect':
+      return t('validationMaxSelect', language, { maxSelect: params }).replace('{max}', params);
+    case 'numeric':
+      return t('validationNumeric', language);
     default:
-      return t('validationGeneric', language) || 'Invalid input';
+      return "Invalid input";
   }
 };
 
@@ -119,6 +133,15 @@ export const validateField = (value, validationRules = {}) => {
     }
     if (rule === 'maxDate' && !validators.maxDate(value, param)) {
       return { isValid: false, errorType: 'maxDate', param };
+    }
+    if (rule === 'minSelect' && !validators.minSelect(value, param)) {
+      return { isValid: false, errorType: 'minSelect', param };
+    }
+    if (rule === 'maxSelect' && !validators.maxSelect(value, param)) {
+      return { isValid: false, errorType: 'maxSelect', param };
+    }
+    if (rule === 'numeric' && !validators.numeric(value, param)) {
+      return { isValid: false, errorType: 'numeric', param };
     }
   }
   

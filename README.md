@@ -494,6 +494,10 @@ The survey system supports the following validation rules:
   // Numeric value validation
   min: 1,
   max: 100,
+
+  // Selected values
+  minSelectedM: 1,
+  maxSelected: 2,
   
   // Custom pattern validation
   pattern: /^[a-zA-Z0-9]+$/,
