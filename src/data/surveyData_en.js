@@ -10,7 +10,8 @@ export const surveyData_en = {
       "No data will be stored",
       "You can interact with all elements"
     ],
-    bodyText: "This is a test survey to demonstrate all available question types."
+    bodyText: "This is a test survey to demonstrate all available question types.",
+    anonymityNote: "This survey is anonymous. Information like email addresses is voluntary and will not be linked to the answers. The code of the survey is publicly accessible and can be checked by anyone. www.github.com/seeco-gmbh/survey."
   },
   
   // Result screen content

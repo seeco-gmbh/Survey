@@ -10,7 +10,8 @@ export const surveyData_de = {
       "Es werden keine Daten gespeichert",
       "Sie können mit allen Elementen interagieren"
     ],
-    bodyText: "Dies ist eine Test-Umfrage zur Demonstration aller verfügbaren Fragetypen."
+    bodyText: "Dies ist eine Test-Umfrage zur Demonstration aller verfügbaren Fragetypen.",
+    anonymityNote: "Diese Umfrage ist anonym. Angaben wie email Adressen sind freiwillig und werden nicht in Verbindung mit den Antworten gespeichert. Der Code der Umfrage ist öffentlich zugänglich und kann von jedem geprüft werden. www.github.com/seeco-gmbh/survey." 
   },
   
   // Result screen content

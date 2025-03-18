@@ -475,6 +475,16 @@ img {
   text-align: center;
 }
 
+.survey-anonymity-note {
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  margin-top: 1rem;
+  max-width: 36rem;
+  margin-left: auto;
+  margin-right: auto;
+  font-style: italic;
+}
+
 .survey-progress {
   margin-bottom: 2rem;
 }
