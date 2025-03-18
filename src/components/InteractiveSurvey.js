@@ -3,6 +3,10 @@ import { t, languages, defaultLanguage } from '../localization';
 import { getSurveyData, getStartScreenData, getResultScreenData } from '../data/surveyData';
 import { getQuestionComponentByType } from './questions';
 import { validateField } from '../utils/validation';
+import ThemeToggle from './ThemeToggle';
+import SurveySection from './SurveySection';
+import StartScreen from './StartScreen';
+import EndScreen from './EndScreen';
 
 const STORAGE_KEYS = {
   SURVEY_RESPONSES: 'surveyResponses',
@@ -93,20 +97,6 @@ class InteractiveSurvey extends React.Component {
   getCurrentQuestionById = (questionId) => {
     const currentSection = this.state.surveyData[this.state.currentSection];
     return currentSection?.questions.find(q => q.id === questionId);
-  };
-
-  handleMultiSelect = (questionId, option, checked) => {
-    const currentSelections = this.state.answers[questionId] || [];
-    
-    if (checked) {
-      this.saveAnswer(questionId, [...currentSelections, option]);
-    } else {
-      this.saveAnswer(questionId, currentSelections.filter(item => item !== option));
-    }
-  };
-
-  handleRankingChange = (questionId, newOrder) => {
-    this.saveAnswer(questionId, newOrder, true);
   };
 
   shouldShowQuestion = (question) => {
@@ -325,76 +315,15 @@ class InteractiveSurvey extends React.Component {
     );
   };
 
-   renderStartScreen = () => {
-    const startData = this.state.startScreenData;
-    
+  renderStartScreen = () => {
     return (
-      <div className="survey-start-screen">
-          <h1 className="survey-title">
-            {startData.title || t('welcomeToSurvey', this.state.language)}
-          </h1>
-          
-          {startData.description && (
-            <p className="survey-description">
-              {startData.description}
-            </p>
-          )}
-
-          <div className="survey-language-selector">
-            <p className="survey-language-prompt">{t('pleaseSelectLanguage', this.state.language)}</p>
-            
-            <div className="select-wrapper">
-              <select
-                value={this.state.language}
-                onChange={(e) => this.changeLanguage(e.target.value)}
-                className="survey-select"
-              >
-                {Object.entries(languages).map(([code, name]) => (
-                  <option key={code} value={code}>
-                    {name}
-                  </option>
-                ))}
-              </select>
-              <div className="select-arrow">
-                <svg className="select-arrow-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </div>
-            </div>
-          </div>
-          
-          {startData.bulletPoints && startData.bulletPoints.length > 0 && (
-            <ul className="survey-bullet-list">
-              {startData.bulletPoints.map((point, index) => (
-                <li key={index} className="survey-bullet-item">
-                  <svg className="survey-bullet-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span>{point}</span>
-                </li>
-              ))}
-            </ul>
-          )}
-          
-          {startData.bodyText && (
-            <div 
-              className="survey-body-text"
-              dangerouslySetInnerHTML={renderHTML(startData.bodyText)}
-            />
-          )}
-          
-          <div className="survey-start-cta">
-            <button
-              onClick={this.proceedWithLanguage}
-              className="survey-button survey-button-primary"
-            >
-              {startData.ctaText || t('proceedToSurvey', this.state.language)}
-              <svg className="survey-button-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </button>
-          </div>
-        </div>
+      <StartScreen
+        startData={this.state.startScreenData}
+        language={this.state.language}
+        changeLanguage={this.changeLanguage}
+        proceedWithLanguage={this.proceedWithLanguage}
+        renderHTML={renderHTML}
+      />
     );
   }
 
@@ -411,76 +340,26 @@ class InteractiveSurvey extends React.Component {
     }
     
     return (
-      <div className="survey-section">
-        <h2 className="survey-section-title">{section.title}</h2>
-        <p className="survey-section-description">{section.description}</p>
-
-        <div className="survey-questions">
-          {section.questions.map(question => this.renderQuestion(question))}
-        </div>
-        
-        {this.state.validationError && (
-          <div className="survey-validation-error">
-            {t('validationError', this.state.language)}
-          </div>
-        )}
-      
-      </div>
+      <SurveySection
+        section={section}
+        shouldShowQuestion={this.shouldShowQuestion}
+        renderQuestion={this.renderQuestion}
+        validationError={this.state.validationError}
+        language={this.state.language}
+      />
     );
   };
 
   renderResults = () => {
-    const resultData = this.state.resultScreenData;
-    
     return (
-      <div className="survey-results">
-        <h2 className="survey-results-title">{resultData.title || t('thankYouTitle', this.state.language)}</h2>
-        <p className="survey-results-description">{resultData.description || t('thankYouMessage', this.state.language)}</p>
-        
-        {resultData.bulletPoints && resultData.bulletPoints.length > 0 && (
-          <ul className="survey-results-bullet-list">
-            {resultData.bulletPoints.map((point, index) => (
-              <li key={index} className="survey-results-bullet-item">{point}</li>
-            ))}
-          </ul>
-        )}
-        
-        {resultData.bodyText && (
-          <div 
-            className="survey-results-body-text"
-            dangerouslySetInnerHTML={renderHTML(resultData.bodyText)}
-          />
-        )}
-        
-        <div className="survey-results-confirmation">
-          <div className="survey-confirmation-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-              <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
-            </svg>
-          </div>
-          <p className="survey-confirmation-message">
-            {resultData.description || t('thankYouMessage', this.state.language)}
-          </p>
-          <p className="survey-confirmation-id">
-            {t('surveyIdLabel', this.state.language)} <span className="survey-id">{this.state.surveyId}</span>
-          </p>
-          
-          {resultData.contactInfo && (
-            <p className="survey-contact-info">{resultData.contactInfo}</p>
-          )}
-        </div>
-        
-        {resultData.ctaText && (
-          <button 
-            onClick={() => window.close()} 
-            className="survey-button survey-button-secondary"
-          >
-            {resultData.ctaText}
-          </button>
-        )}
-      </div>
+      <EndScreen
+        resultData={this.state.resultScreenData}
+        language={this.state.language}
+        surveyId={this.state.surveyId}
+        renderHTML={renderHTML}
+      />
     );
-  };
+  }
 
   renderProgressBar = () => (
     <div className="survey-progress">
@@ -531,28 +410,6 @@ class InteractiveSurvey extends React.Component {
     </div>
   );
 
-  componentDidMount() {
-    if (!document.getElementById('survey-animations')) {
-      const style = document.createElement('style');
-      style.id = 'survey-animations';
-      style.innerHTML = `
-        @keyframes float {
-          0% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
-          100% { transform: translateY(0px); }
-        }
-        .animate-float {
-          animation: float 3s ease-in-out infinite;
-        }
-      `;
-      document.head.appendChild(style);
-    }
-
-    if (this.state.languageSelected && this.state.surveyData && this.state.surveyData.length > 0) {
-      this.checkAndSkipConditionalSections();
-    }
-  }
-
   checkAndSkipConditionalSections = () => {
     let sectionIndex = this.state.currentSection;
     
@@ -577,6 +434,7 @@ class InteractiveSurvey extends React.Component {
     if (!this.state.surveyData || !Array.isArray(this.state.surveyData)) {
       return (
         <div className="survey-container survey-loading">
+          <ThemeToggle />
           <p>Loading survey data...</p>
         </div>
       );
@@ -585,10 +443,13 @@ class InteractiveSurvey extends React.Component {
     return (
       <div className="survey-container">
         {!this.state.languageSelected ? (
-          this.renderStartScreen()
-        ) : !this.state.submitted ? (
-         
           <>
+            <ThemeToggle />
+            {this.renderStartScreen()}
+          </>
+        ) : !this.state.submitted ? (
+          <>
+            <ThemeToggle />
             <h1 className="survey-main-title">
               {getSurveyData(this.state.language).title}
             </h1>
@@ -597,7 +458,10 @@ class InteractiveSurvey extends React.Component {
             {this.renderNavigationButtons()}
           </>
         ) : (
-          this.renderResults()
+          <>
+            <ThemeToggle />
+            {this.renderResults()}
+          </>
         )}
       </div>
     );
