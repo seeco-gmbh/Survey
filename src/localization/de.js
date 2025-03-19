@@ -33,6 +33,12 @@ export const de = {
   validationRanked: "Bitte ordnen Sie die Elemente nach Ihrer Präferenz",
   validationMinSelect: "Bitte wählen Sie mindestens {min}",
   validationMaxSelect: "Bitte wählen Sie höchstens {max}",
+
+  //Select question
+  selectExactly: "Wählen Sie genau {count}",
+  selectBetween: "Wählen Sie zwischen {min} und {max}",
+  selectMin: "min. {min}",
+  selectMax: "max. {max}",
   
   // Results page
   thankYouTitle: "Vielen Dank für Ihre Teilnahme!",
