@@ -872,6 +872,13 @@ img {
 
 .slider-mark {
   position: absolute;
+  max-width: 100px;
+}
+
+@media (max-width: 720px) {
+  .slider-mark {
+    max-width: 60px;
+  }
 }
 
 .slider-mark-value,
@@ -891,8 +898,24 @@ img {
   font-size: 0.75rem;
   line-height: 1.2;
   color: var(--text-secondary);
-  word-wrap: break-word;
-  overflow-wrap: break-word;
+
+  word-break: break-word;
+  hyphens: auto;
+}
+
+.slider-mark:first-child {
+  text-align: left !important;
+  transform: none !important;
+  left: 0 !important;
+  max-width: 30% !important;
+}
+
+.slider-mark:last-child {
+  text-align: right !important;
+  left: auto !important;
+  right: 0 !important;
+  transform: none !important;
+  max-width: 30% !important;
 }
 
 .question-hint {
@@ -1000,7 +1023,7 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0.5rem;
+  margin: 0.25rem;
 }
 
 .mode-toggle:hover {
