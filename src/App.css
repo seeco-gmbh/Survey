@@ -708,6 +708,8 @@ img {
   padding: 0.25rem;
   border-radius: 0.25rem;
   transition: all var(--transition-fast);
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .checkbox-item:hover, .radio-item:hover {
@@ -723,11 +725,18 @@ img {
   margin-right: 0.75rem;
   width: 1.25rem;
   height: 1.25rem;
+  min-width: 1.25rem;
+  min-height: 1.25rem;
   cursor: pointer;
   appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
   border: 2px solid var(--checkbox-border);
   border-radius: 0.25rem;
   background-color: var(--input-bg);
+  box-sizing: border-box;
+  flex-shrink: 0;
+  display: inline-block;
 }
 
 .radio-input {
@@ -765,6 +774,9 @@ img {
 .checkbox-label, .radio-label {
   cursor: pointer;
   color: var(--text-primary);
+  display: inline-block;
+  user-select: none;
+  flex: 1;
 }
 
 .checkbox-label-disabled, .radio-label-disabled {

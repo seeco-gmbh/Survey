@@ -4,7 +4,7 @@ import { getSurveyData, getStartScreenData, getResultScreenData } from '../data/
 import { getQuestionComponentByType } from './questions';
 import { validateField } from '../utils/validation';
 import ThemeToggle from './ThemeToggle';
-import SurveySection from './SurveySection';
+import SurveySection from './Section';
 import StartScreen from './StartScreen';
 import EndScreen from './EndScreen';
 
@@ -317,13 +317,13 @@ class InteractiveSurvey extends React.Component {
 
   renderStartScreen = () => {
     return (
-      <StartScreen
-        startData={this.state.startScreenData}
-        language={this.state.language}
-        changeLanguage={this.changeLanguage}
-        proceedWithLanguage={this.proceedWithLanguage}
-        renderHTML={renderHTML}
-      />
+        <StartScreen
+          startData={this.state.startScreenData}
+          language={this.state.language}
+          changeLanguage={this.changeLanguage}
+          proceedWithLanguage={this.proceedWithLanguage}
+          renderHTML={renderHTML}
+        />
     );
   }
 

@@ -62,7 +62,7 @@ const MultiselectQuestion = ({
             <div key={option} className="checkbox-item">
               <input
                 type="checkbox"
-                className="checkbox-input "
+                className="checkbox-input"
                 id={`${question.id}-${option}`}
                 checked={isChecked}
                 disabled={isDisabled}
