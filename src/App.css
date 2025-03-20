@@ -868,10 +868,10 @@ img {
 
 .slider-mark {
   position: absolute;
-  max-width: 100px;
+  max-width: 120px;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 1024px) {
   .slider-mark {
     max-width: 60px;
   }
