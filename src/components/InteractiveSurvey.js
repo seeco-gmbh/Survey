@@ -246,22 +246,41 @@ class InteractiveSurvey extends React.Component {
   };
 
   saveToJsonBin = (data) => {
+    if (!process.env.REACT_APP_JSONBIN_API_KEY) {
+      console.error('JSONBin API key is not set. Please check your .env file and restart the development server.');
+      this.saveToLocalStorage(data);
+      return;
+    }
+
     fetch('https://api.jsonbin.io/v3/b', {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
-        'X-Master-Key': '$APIKey',
-        'X-Bin-Name': this.state.surveyId
+        'X-Bin-Name': this.state.surveyId,
+        'X-Master-Key': process.env.JSONBIN_API_KEY,
+        'X-Collection-Id': process.env.JSONBIN_COLLECTION_ID,
       },
       body: JSON.stringify(data)
     })
-    .then(response => response.json())
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
     .then(data => {
+      if (data.message === 'Invalid X-Master-Key provided') {
+        throw new Error('Invalid API key. Please check your .env file.');
+      }
       console.log('Saved to JSONBin:', data);
-      localStorage.setItem('lastSurveyId', data.metadata.id);
+      if (data.metadata && data.metadata.id) {
+        localStorage.setItem('lastSurveyId', data.metadata.id);
+      } else {
+        throw new Error('Unexpected response format from JSONBin');
+      }
     })
     .catch(error => {
-      console.error('Error saving to JSONBin:', error);
+      console.error('Error saving to JSONBin:', error.message);
       this.saveToLocalStorage(data);
     });
   };
