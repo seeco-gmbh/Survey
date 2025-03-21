@@ -257,8 +257,7 @@ class InteractiveSurvey extends React.Component {
       headers: { 
         'Content-Type': 'application/json',
         'X-Bin-Name': this.state.surveyId,
-        'X-Master-Key': process.env.JSONBIN_API_KEY,
-        'X-Collection-Id': process.env.JSONBIN_COLLECTION_ID,
+        'X-Master-Key': process.env.JSONBIN_API_KEY
       },
       body: JSON.stringify(data)
     })
