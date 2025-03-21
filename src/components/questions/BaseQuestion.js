@@ -12,35 +12,63 @@ const BaseQuestion = ({
 }) => {
   const { id, label, required, info, hint } = question;
   const [showTooltip, setShowTooltip] = useState(false);
-  const [tooltipWidth, setTooltipWidth] = useState(0);
+  const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
   const tooltipRef = useRef(null);
-  const textMeasureRef = useRef(null);
+  const iconRef = useRef(null);
   
   const { hasError, errorMessage } = isError(question, value, shouldValidate, language);
   
   const labelClass = hasError ? "question-label question-label-error" : "question-label";
   
+  const calculateTooltipPosition = () => {
+    if (!iconRef.current || !tooltipRef.current) return;
+
+    const iconRect = iconRef.current.getBoundingClientRect();
+    const tooltipRect = tooltipRef.current.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+
+    // Start with position below the icon
+    let top = iconRect.bottom + 8;
+    let left = iconRect.left;
+
+    // Check if tooltip would go off the right edge
+    if (left + tooltipRect.width > viewportWidth - 16) {
+      left = viewportWidth - tooltipRect.width - 16;
+    }
+
+    // Check if tooltip would go off the left edge
+    if (left < 16) {
+      left = 16;
+    }
+
+    // If tooltip would go off the bottom, position it above the icon
+    if (top + tooltipRect.height > viewportHeight - 16) {
+      top = iconRect.top - tooltipRect.height - 8;
+    }
+
+    setTooltipPosition({ top, left });
+  };
+
   useEffect(() => {
-    if (showTooltip && info && textMeasureRef.current) {
-      const span = document.createElement('span');
-      span.style.visibility = 'hidden';
-      span.style.position = 'absolute';
-      span.style.whiteSpace = 'nowrap';
-      span.style.fontSize = '0.875rem'; 
-      span.style.padding = '0.75rem'; 
-      span.textContent = info;
-      document.body.appendChild(span);
-      
-      const textWidth = span.offsetWidth + 16;
-      document.body.removeChild(span);
-      
-      setTooltipWidth(textWidth);
+    if (showTooltip && info) {
+      calculateTooltipPosition();
+      // Recalculate position on window resize
+      window.addEventListener('resize', calculateTooltipPosition);
+      // Recalculate position on scroll
+      window.addEventListener('scroll', calculateTooltipPosition);
+
+      return () => {
+        window.removeEventListener('resize', calculateTooltipPosition);
+        window.removeEventListener('scroll', calculateTooltipPosition);
+      };
     }
   }, [showTooltip, info]);
   
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (tooltipRef.current && !tooltipRef.current.contains(event.target)) {
+      if (tooltipRef.current && !tooltipRef.current.contains(event.target) && 
+          iconRef.current && !iconRef.current.contains(event.target)) {
         setShowTooltip(false);
       }
     };
@@ -57,7 +85,7 @@ const BaseQuestion = ({
   const requiredMark = required ? <span className="required-mark">*</span> : null;
   
   const infoIcon = info ? (
-    <span className="info-icon" ref={tooltipRef}>
+    <span className="info-icon" ref={iconRef}>
       <span 
         className="info-icon-button"
         onClick={() => setShowTooltip(!showTooltip)}
@@ -67,9 +95,12 @@ const BaseQuestion = ({
       </span>
       {showTooltip && (
         <span 
-          ref={textMeasureRef}
-          style={{ width: `${tooltipWidth}px` }}
+          ref={tooltipRef}
           className="info-tooltip"
+          style={{
+            top: `${tooltipPosition.top}px`,
+            left: `${tooltipPosition.left}px`
+          }}
         >
           {info}
         </span>
