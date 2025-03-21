@@ -79,6 +79,7 @@ export const surveyData_en = {
           id: "select_example_2",
           type: "select",
           label: "Choose next section to test conditional sections",
+          info: "Test info for select question",
           required: true,
           options: [
             "Basic Input Types",
